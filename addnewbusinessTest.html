@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    
+	
+  </head>
+   <body> <!-- onload="initMap()"> --> 
+   
+    <!-- Vaiables Globales -->
+    <script>
+		var map;
+		var myLatLng1;
+		var myLatLng2;
+		
+    </script> 
+	
+			<h2>Craic Categories:</h2>
+
+			<form action=""> 
+			<select name="categories" onchange="showCategories(this.value)">
+				<option value="">Select a categorie:</option>
+				<option value="1">Food and Drinks</option>
+				<option value="2">Music</option>
+				<option value="3">Arts and performance</option>
+				<option value="4">Sports and Wellness</option>
+				<option value="5">Education and Networking</option>
+			
+			</select>
+			</form>
+			<br>
+			<div id="txtHint">Categories will be listed here...</div>
+			
+			<script>
+			function showCategories(str) {
+						   if (str == "") {
+					document.getElementById("txtHint").innerHTML = "";
+					return;
+				} else { 
+					if (window.XMLHttpRequest) {
+						// code for IE7+, Firefox, Chrome, Opera, Safari
+						xmlhttp = new XMLHttpRequest();
+					} else {
+						// code for IE6, IE5
+						xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+					}
+					xmlhttp.onreadystatechange = function() {
+						if (this.readyState == 4 && this.status == 200) {
+							document.getElementById("txtHint").innerHTML = this.responseText;
+						}
+					};
+					xmlhttp.open("GET","./php/addnewbusiness.php?q="+str,true);
+					xmlhttp.send();
+				}
+			}
+			</script>
+			
+			
+	
+	 <div id="locations" style="height: 10%"> Ubicacion central</div>
+	 <button type="button" onclick="showCategories()">GetCentre</button>
+     <div id="map" style="height: 90%"></div>	
+				
+	<script>
+		function getMapCenterLocation() {
+			var mylat = map.getCenter().lat(); 
+			var mylng = map.getCenter().lng();
+			document.getElementById("locations").innerHTML = mylat + ' / ' + mylng ;
+		}
+	</script>
+	
+	
+	
+  </body> 
+    
+    <script>
+      function initMap() {
+         myLatLng1 = {lat: 53.3369950, lng: -6.2655380};
+		 myLatLng2 = {lat: 53.3363925, lng: -6.2655910};
+
+        // Create a map object and specify the DOM element for display.
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: myLatLng1,
+          zoom: 18
+        });
+	  } // End initMap
+	  
+	  function createMarkers(){
+		
+	    myLatLng2 = {lat: map.getCenter().lat(), lng: map.getCenter().lng()};
+		
+		var contentString1 = '<div id="content">'+
+            '<div id="siteNotice">'+
+            '</div>'+
+            '<h1 id="firstHeading" class="firstHeading">Las Tapas de Lola</h1>'+
+            '<div id="bodyContent">'+
+            '<p><b>Las Tapas de Lola</b>, Vibrant, atmospheric Spanish place offering ' + 
+			'authentic and inventive tapas creations and wines.'+
+            '<a href="http://lastapasdelola.com/?title=LasTapasdeLola"</a> '+
+            'http://lastapasdelola.com/</a> '+
+			'</div>'+
+            '</div>';
+
+        var infowindow1 = new google.maps.InfoWindow({
+          content: contentString1
+        });
+
+		// Create a marker and set its position.
+        var marker = new google.maps.Marker({
+          map: map,
+          position: myLatLng2,
+          title: 'Las Tapas de Lola - Lets eat tapas'
+        });
+		 
+		marker.addListener('click', function() {
+          infowindow1.open(map, marker);
+        }); 
+		
+		document.getElementById("locations").innerHTML = map.getCenter().lat() + ' / ' + map.getCenter().lng() ;
+		
+     
+      }
+    </script>
+	
+		
+	<script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmicFIc2tzmCUKm_W43wQq0G-qqheuAeQ&callback=initMap">
+    </script>	
+</html>
